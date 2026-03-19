@@ -219,7 +219,8 @@ async function loadData() {
     }
     const j = await r.json();
     sha = j.sha;
-    data = JSON.parse(atob(j.content.replace(/\n/g,'')));
+    const raw = Uint8Array.from(atob(j.content.replace(/\n/g,'')), c => c.charCodeAt(0));
+    data = JSON.parse(new TextDecoder('utf-8').decode(raw));
   } catch(e) { toast('加载失败，请刷新'); }
   renderAll();
 }

@@ -5,148 +5,150 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>为歪马健康工作30年 · 运动挑战</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif; background: #f0f4f8; min-height: 100vh; }
-
-  .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px 16px 30px; text-align: center; }
-  .header h1 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
-  .header p { font-size: 13px; opacity: 0.85; }
-
-  .week-card { background: white; margin: -16px 16px 16px; border-radius: 12px; padding: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
-  .week-title { font-size: 13px; color: #888; margin-bottom: 10px; }
-  .week-range { font-size: 15px; font-weight: 600; color: #333; }
-
-  .nav { display: flex; background: white; border-bottom: 1px solid #eee; }
-  .nav-item { flex: 1; text-align: center; padding: 12px 0; font-size: 14px; color: #888; cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; }
-  .nav-item.active { color: #667eea; border-bottom-color: #667eea; font-weight: 600; }
-
-  .page { display: none; padding: 16px; }
-  .page.active { display: block; }
-
-  /* 打卡页 */
-  .user-select { background: white; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-  .user-select h3 { font-size: 14px; color: #666; margin-bottom: 12px; }
-  .user-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-  .user-btn { padding: 10px 4px; border: 2px solid #e8e8e8; border-radius: 8px; background: white; font-size: 13px; cursor: pointer; transition: all .2s; text-align: center; }
-  .user-btn.selected { border-color: #667eea; background: #f0edff; color: #667eea; font-weight: 600; }
-
-  .checkin-area { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-  .checkin-btn { width: 100%; padding: 16px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: opacity .2s; margin-top: 12px; }
-  .checkin-btn:disabled { opacity: 0.4; }
-  .checkin-btn:active { opacity: 0.85; }
-
-  .today-status { margin-top: 12px; font-size: 13px; color: #888; text-align: center; }
-  .done-badge { display: inline-block; background: #e8f5e9; color: #4caf50; padding: 4px 12px; border-radius: 20px; font-size: 13px; }
-
-  .motivation { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; border-radius: 12px; padding: 16px; margin-bottom: 16px; text-align: center; font-size: 14px; line-height: 1.6; display: none; }
-
-  /* 本周进度 */
-  .progress-card { background: white; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-  .progress-card h3 { font-size: 15px; font-weight: 600; color: #333; margin-bottom: 12px; }
-  .member-row { display: flex; align-items: center; margin-bottom: 10px; }
-  .member-name { width: 48px; font-size: 13px; color: #555; flex-shrink: 0; }
-  .progress-bar-wrap { flex: 1; background: #f0f0f0; border-radius: 10px; height: 8px; margin: 0 10px; overflow: hidden; }
-  .progress-bar { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #667eea, #764ba2); transition: width .4s; }
-  .progress-count { font-size: 12px; color: #888; width: 36px; text-align: right; flex-shrink: 0; }
-  .progress-count.done { color: #4caf50; font-weight: 600; }
-
-  /* 排行榜 */
-  .rank-card { background: white; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-  .rank-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #f5f5f5; }
-  .rank-item:last-child { border-bottom: none; }
-  .rank-no { width: 28px; font-size: 16px; font-weight: 700; color: #ccc; flex-shrink: 0; }
-  .rank-no.gold { color: #ffd700; }
-  .rank-no.silver { color: #c0c0c0; }
-  .rank-no.bronze { color: #cd7f32; }
-  .rank-name { flex: 1; font-size: 14px; color: #333; }
-  .rank-streak { font-size: 12px; color: #888; margin-right: 8px; }
-  .rank-total { font-size: 15px; font-weight: 700; color: #667eea; }
-
-  /* 个人记录 */
-  .my-card { background: white; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-  .my-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
-  .stat-box { text-align: center; background: #f8f6ff; border-radius: 10px; padding: 12px 8px; }
-  .stat-num { font-size: 22px; font-weight: 700; color: #667eea; }
-  .stat-label { font-size: 11px; color: #888; margin-top: 2px; }
-  .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
-  .cal-header { text-align: center; font-size: 11px; color: #aaa; padding: 2px 0; }
-  .cal-day { aspect-ratio: 1; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; background: #f5f5f5; color: #ccc; }
-  .cal-day.checked { background: #667eea; color: white; font-weight: 600; }
-  .cal-day.today { border: 2px solid #667eea; color: #667eea; background: white; }
-  .cal-day.today.checked { background: #667eea; color: white; border-color: #4a5fe0; }
-  .cal-day.empty { background: transparent; }
-
-  .section-title { font-size: 13px; color: #888; margin-bottom: 10px; font-weight: 600; }
-
-  /* toast */
-  .toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); background: rgba(0,0,0,0.75); color: white; padding: 12px 24px; border-radius: 8px; font-size: 14px; opacity: 0; pointer-events: none; transition: all .3s; z-index: 999; text-align: center; }
-  .toast.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-
-  .empty-tip { text-align: center; color: #ccc; font-size: 14px; padding: 30px 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif; background: #f0f4f8; min-height: 100vh; }
+.header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px 16px 32px; text-align: center; }
+.header h1 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+.header p { font-size: 13px; opacity: 0.85; }
+.week-card { background: white; margin: -16px 16px 16px; border-radius: 12px; padding: 14px 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: center; }
+.week-range { font-size: 15px; font-weight: 600; color: #333; }
+.week-label { font-size: 12px; color: #aaa; margin-bottom: 2px; }
+.nav { display: flex; background: white; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 10; }
+.nav-item { flex: 1; text-align: center; padding: 12px 0; font-size: 13px; color: #999; cursor: pointer; border-bottom: 2px solid transparent; }
+.nav-item.active { color: #667eea; border-bottom-color: #667eea; font-weight: 600; }
+.page { display: none; padding: 16px; padding-bottom: 40px; }
+.page.active { display: block; }
+.card { background: white; border-radius: 12px; padding: 16px; margin-bottom: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.card h3 { font-size: 15px; font-weight: 600; color: #333; margin-bottom: 14px; }
+.user-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.user-btn { padding: 10px 4px; border: 2px solid #e8e8e8; border-radius: 8px; background: white; font-size: 13px; cursor: pointer; text-align: center; }
+.user-btn.selected { border-color: #667eea; background: #f0edff; color: #667eea; font-weight: 600; }
+.checkin-btn { width: 100%; padding: 16px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 14px; }
+.checkin-btn:disabled { opacity: 0.35; }
+.today-status { font-size: 13px; color: #888; text-align: center; }
+.done-badge { display: inline-block; background: #e8f5e9; color: #43a047; padding: 4px 14px; border-radius: 20px; font-size: 13px; }
+.result-card { border-radius: 14px; padding: 20px 16px; margin-bottom: 14px; display: none; color: white; text-align: center; }
+.result-card.show { display: block; animation: fadeIn .4s ease; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+.result-emoji { font-size: 42px; margin-bottom: 8px; }
+.result-msg { font-size: 15px; font-weight: 600; margin-bottom: 12px; line-height: 1.6; }
+.result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+.result-stat { background: rgba(255,255,255,0.2); border-radius: 10px; padding: 10px; }
+.result-stat-num { font-size: 20px; font-weight: 700; }
+.result-stat-lbl { font-size: 11px; opacity: 0.85; margin-top: 2px; }
+.result-footer { background: rgba(255,255,255,0.15); border-radius: 10px; padding: 10px; font-size: 13px; line-height: 1.8; }
+.member-row { display: flex; align-items: center; margin-bottom: 10px; }
+.member-name { width: 48px; font-size: 13px; color: #555; flex-shrink: 0; }
+.bar-wrap { flex: 1; background: #f0f0f0; border-radius: 10px; height: 8px; margin: 0 10px; overflow: hidden; }
+.bar { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #667eea, #764ba2); transition: width .5s; }
+.bar.done { background: linear-gradient(90deg, #43a047, #66bb6a); }
+.bar-cnt { font-size: 12px; color: #888; width: 36px; text-align: right; flex-shrink: 0; }
+.bar-cnt.done { color: #43a047; font-weight: 600; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+.cal-hd { text-align: center; font-size: 11px; color: #bbb; padding: 2px 0; }
+.cal-day { aspect-ratio: 1; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; background: #f5f5f5; color: #bbb; }
+.cal-day.has { background: #667eea; color: white; font-weight: 600; }
+.cal-day.today { outline: 2px solid #667eea; color: #667eea; background: white; }
+.cal-day.today.has { background: #667eea; color: white; outline-color: #4a5fe0; }
+.cal-day.future { background: transparent; color: #ddd; }
+.cal-day.empty { background: transparent; }
+.rank-item { display: flex; align-items: center; padding: 11px 0; border-bottom: 1px solid #f5f5f5; }
+.rank-item:last-child { border-bottom: none; }
+.rank-icon { width: 32px; font-size: 18px; flex-shrink: 0; }
+.rank-info { flex: 1; }
+.rank-name { font-size: 14px; color: #333; font-weight: 500; }
+.rank-sub { font-size: 11px; color: #aaa; margin-top: 2px; }
+.rank-num { font-size: 18px; font-weight: 700; color: #667eea; }
+.my-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+.stat-box { text-align: center; background: #f8f6ff; border-radius: 10px; padding: 12px 8px; }
+.stat-num { font-size: 22px; font-weight: 700; color: #667eea; }
+.stat-label { font-size: 11px; color: #888; margin-top: 2px; }
+.sec-title { font-size: 12px; color: #aaa; font-weight: 600; margin-bottom: 10px; }
+.toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(.85); background: rgba(0,0,0,.75); color: white; padding: 12px 24px; border-radius: 8px; font-size: 14px; opacity: 0; pointer-events: none; transition: all .25s; z-index: 200; text-align: center; }
+.toast.show { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+.modal-mask { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 100; display: flex; align-items: center; justify-content: center; }
+.modal { background: white; border-radius: 16px; padding: 24px; margin: 20px; width: 100%; max-width: 340px; }
+.modal h2 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+.modal p { font-size: 13px; color: #666; margin-bottom: 16px; line-height: 1.6; }
+.modal input { width: 100%; border: 1.5px solid #e0e0e0; border-radius: 8px; padding: 10px 12px; font-size: 14px; outline: none; margin-bottom: 12px; }
+.modal input:focus { border-color: #667eea; }
+.modal-btn { width: 100%; padding: 13px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; }
 </style>
 </head>
 <body>
 
+<div class="modal-mask" id="setupModal" style="display:none">
+  <div class="modal">
+    <h2>🏃 欢迎加入运动挑战</h2>
+    <p>首次使用需要输入访问密钥，请联系管理员获取。</p>
+    <input type="password" id="tokenInput" placeholder="请输入访问密钥" />
+    <button class="modal-btn" onclick="saveToken()">确认进入</button>
+  </div>
+</div>
+
 <div class="header">
   <h1>🏃 为歪马健康工作30年</h1>
-  <p>运动挑战 · 每周4次，坚持到底</p>
+  <p>运动挑战 · 每周4次，不达标就认输！</p>
 </div>
-
 <div class="week-card">
-  <div class="week-title">本挑战周</div>
-  <div class="week-range" id="weekRange">加载中...</div>
+  <div>
+    <div class="week-label">本挑战周</div>
+    <div class="week-range" id="weekRange">—</div>
+  </div>
+  <div style="font-size:13px;color:#aaa" id="weekCountdown"></div>
 </div>
-
 <div class="nav">
   <div class="nav-item active" onclick="switchPage('checkin')">打卡</div>
-  <div class="nav-item" onclick="switchPage('progress')">本周进度</div>
+  <div class="nav-item" onclick="switchPage('progress')">本周</div>
   <div class="nav-item" onclick="switchPage('rank')">排行榜</div>
   <div class="nav-item" onclick="switchPage('mine')">我的</div>
 </div>
 
-<!-- 打卡页 -->
 <div class="page active" id="page-checkin">
-  <div id="motivationBox" class="motivation"></div>
-  <div class="user-select">
+  <div id="resultCard" class="result-card"></div>
+  <div class="card">
     <h3>选择你的名字</h3>
     <div class="user-grid" id="userGrid"></div>
   </div>
-  <div class="checkin-area">
+  <div class="card">
     <div class="today-status" id="todayStatus">请先选择名字</div>
     <button class="checkin-btn" id="checkinBtn" disabled onclick="doCheckin()">✅ 今天运动了！</button>
   </div>
 </div>
 
-<!-- 本周进度页 -->
 <div class="page" id="page-progress">
-  <div class="progress-card">
-    <h3>本周完成情况（目标：4次）</h3>
+  <div class="card">
+    <h3>📊 本周完成情况（目标 4 次）</h3>
     <div id="progressList"></div>
   </div>
-  <div class="progress-card">
-    <h3>📅 本周打卡日历</h3>
-    <div id="weekCalendar"></div>
+  <div class="card">
+    <h3>📅 本周日历</h3>
+    <div class="cal-grid" id="weekCal"></div>
   </div>
 </div>
 
-<!-- 排行榜页 -->
 <div class="page" id="page-rank">
-  <div class="rank-card">
-    <h3 style="font-size:15px;font-weight:600;color:#333;margin-bottom:12px;">🏆 累计排行榜</h3>
+  <div class="card">
+    <h3>🏆 累计排行榜</h3>
     <div id="rankList"></div>
   </div>
+  <div class="card">
+    <h3>⚡ 本周排行</h3>
+    <div id="weekRankList"></div>
+  </div>
 </div>
 
-<!-- 我的页 -->
 <div class="page" id="page-mine">
-  <div class="my-card">
-    <div class="section-title">选择查看谁的记录</div>
-    <div class="user-grid" id="mineUserGrid"></div>
+  <div class="card">
+    <div class="sec-title">查看谁的记录</div>
+    <div class="user-grid" id="mineGrid"></div>
   </div>
-  <div class="my-card" id="myStatsCard" style="display:none">
-    <div class="my-stats" id="myStats"></div>
-    <div class="section-title">近30天打卡日历</div>
-    <div class="calendar-grid" id="myCalendar"></div>
+  <div id="mineDetail" style="display:none">
+    <div class="card">
+      <div class="my-stats" id="myStats"></div>
+      <div class="sec-title">近30天打卡日历</div>
+      <div class="cal-grid" id="myCal"></div>
+    </div>
   </div>
 </div>
 
@@ -154,315 +156,304 @@
 
 <script>
 const REPO = 'Echozhao95146/fitness-checkin';
-const TOKEN = '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';
-const DATA_FILE = 'data.json';
-const API = `https://api.github.com/repos/${REPO}/contents/${DATA_FILE}`;
+const API = 'https://api.github.com/repos/' + REPO + '/contents/data.json';
+const KCAL = 300; // 每次运动估算消耗卡路里
 
 const MOTIVATIONS = [
-  '动起来！身体是革命的本钱 💪',
-  '今天的汗水，是明天的健康存款 🔥',
-  '歪马精神！为了30年后还能跑！',
-  '打卡成功！你比昨天更好了 ⭐',
-  '运动不止，岁月不老！继续加油 🚀',
-  '坚持就是胜利，你做到了！🎉',
-  '每一滴汗水都算数！💦',
-  '为了健康工作30年，今天的你超棒！🌟',
+  ['🔥','燃爆了！今天的汗水是明天健康的利息！','linear-gradient(135deg,#f093fb,#f5576c)'],
+  ['💪','歪马精神MAX！为了30年后还能跑，今天必须动！','linear-gradient(135deg,#4facfe,#00f2fe)'],
+  ['⚡','打败了懒惰的一天！你就是今天最靓的仔！','linear-gradient(135deg,#43e97b,#38f9d7)'],
+  ['🚀','打卡成功！你正在把意志力变成肌肉记忆！','linear-gradient(135deg,#fa709a,#fee140)'],
+  ['🏅','坚持是最好的天赋，今天又积累了一点！','linear-gradient(135deg,#a18cd1,#fbc2eb)'],
+  ['🌟','运动完的你，整个人都在发光！','linear-gradient(135deg,#667eea,#764ba2)'],
+  ['🎯','每次打卡都是对自己的投资，今天赚到了！','linear-gradient(135deg,#f7971e,#ffd200)'],
+  ['🦁','歪马不是普通马，今天的你证明了这一点！','linear-gradient(135deg,#e96c1e,#f7b733)'],
 ];
 
-let appData = { members: [], records: [] };
-let fileSha = '';
-let selectedUser = localStorage.getItem('lastUser') || '';
-let mineSelected = '';
+let data = { members: [], records: [] };
+let sha = '';
+let selUser = localStorage.getItem('lastUser') || '';
+let mineUser = '';
+let TOKEN = '';
 
-// 工具函数
+function pad(n) { return String(n).padStart(2,'0'); }
 function today() {
   const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
 }
-
-function formatDate(str) {
-  const [y,m,d] = str.split('-');
-  return `${m}/${d}`;
+function toDS(d) {
+  return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
 }
-
-function getWeekRange(dateStr) {
-  const d = new Date(dateStr);
-  const day = d.getDay(); // 0=Sun
-  const diffToSun = day === 0 ? 0 : -day;
-  const sun = new Date(d); sun.setDate(d.getDate() + diffToSun);
+function week(ds) {
+  const d = new Date(ds), day = d.getDay();
+  const sun = new Date(d); sun.setDate(d.getDate() - day);
   const sat = new Date(sun); sat.setDate(sun.getDate() + 6);
-  const fmt = dt => `${dt.getMonth()+1}月${dt.getDate()}日`;
-  return { start: toDateStr(sun), end: toDateStr(sat), label: `${fmt(sun)} ~ ${fmt(sat)}` };
+  const f = x => (x.getMonth()+1) + '月' + x.getDate() + '日';
+  return { start: toDS(sun), end: toDS(sat), label: f(sun) + ' ~ ' + f(sat) };
 }
 
-function toDateStr(d) {
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2200);
 }
 
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2000);
+function saveToken() {
+  const t = document.getElementById('tokenInput').value.trim();
+  if (!t) { toast('请输入访问密钥'); return; }
+  localStorage.setItem('gh_token', t);
+  TOKEN = t;
+  document.getElementById('setupModal').style.display = 'none';
+  loadData();
 }
 
-// 加载数据
 async function loadData() {
   try {
     const r = await fetch(API + '?t=' + Date.now(), {
-      headers: { 'Authorization': `token ${TOKEN}`, 'Accept': 'application/vnd.github.v3+json' }
+      headers: { Authorization: 'token ' + TOKEN, Accept: 'application/vnd.github.v3+json' }
     });
+    if (r.status === 401 || r.status === 404) {
+      localStorage.removeItem('gh_token');
+      document.getElementById('setupModal').style.display = 'flex';
+      return;
+    }
     const j = await r.json();
-    fileSha = j.sha;
-    appData = JSON.parse(atob(j.content.replace(/\n/g,'')));
-  } catch(e) {
-    showToast('数据加载失败，请刷新重试');
-  }
-  render();
+    sha = j.sha;
+    data = JSON.parse(atob(j.content.replace(/\n/g,'')));
+  } catch(e) { toast('加载失败，请刷新'); }
+  renderAll();
 }
 
-// 保存数据
 async function saveData() {
-  const content = btoa(unescape(encodeURIComponent(JSON.stringify(appData, null, 2))));
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
   const r = await fetch(API, {
     method: 'PUT',
-    headers: { 'Authorization': `token ${TOKEN}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message: `打卡记录更新 ${today()}`, content, sha: fileSha })
+    headers: { Authorization: 'token ' + TOKEN, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: '打卡 ' + today(), content, sha })
   });
   const j = await r.json();
-  if (j.content) { fileSha = j.content.sha; return true; }
+  if (j.content) { sha = j.content.sha; return true; }
   return false;
 }
 
-// 打卡
 async function doCheckin() {
-  if (!selectedUser) return;
+  if (!selUser) return;
   const t = today();
-  const exists = appData.records.find(r => r.user === selectedUser && r.date === t);
-  if (exists) { showToast('今天已经打卡了 ✅'); return; }
-
-  document.getElementById('checkinBtn').disabled = true;
-  document.getElementById('checkinBtn').textContent = '提交中...';
-
-  appData.records.push({ user: selectedUser, date: t });
-  appData.records.sort((a,b) => b.date.localeCompare(a.date));
-
+  if (data.records.find(r => r.user === selUser && r.date === t)) { toast('今天已经打卡了 ✅'); return; }
+  const btn = document.getElementById('checkinBtn');
+  btn.disabled = true; btn.textContent = '提交中...';
+  data.records.push({ user: selUser, date: t });
+  data.records.sort((a,b) => b.date.localeCompare(a.date));
   const ok = await saveData();
   if (ok) {
-    localStorage.setItem('lastUser', selectedUser);
-    const msg = MOTIVATIONS[Math.floor(Math.random() * MOTIVATIONS.length)];
-    const box = document.getElementById('motivationBox');
-    box.textContent = msg;
-    box.style.display = 'block';
-    setTimeout(() => { box.style.display = 'none'; }, 4000);
-    showToast('打卡成功！💪');
-    render();
+    localStorage.setItem('lastUser', selUser);
+    showResult();
   } else {
-    appData.records = appData.records.filter(r => !(r.user === selectedUser && r.date === t));
-    showToast('保存失败，请重试');
-    render();
+    data.records = data.records.filter(r => !(r.user === selUser && r.date === t));
+    toast('保存失败，请重试');
   }
+  renderCheckin();
+}
+
+function showResult() {
+  const w = week(today());
+  const weekCnt = data.records.filter(r => r.user === selUser && r.date >= w.start && r.date <= w.end).length;
+  const total = data.records.filter(r => r.user === selUser).length;
+  const kcal = total * KCAL;
+  const oreo = Math.floor(kcal / 53);
+  const coke = Math.floor(kcal / 140);
+
+  const wkCounts = data.members.map(m => data.records.filter(r => r.user===m && r.date>=w.start && r.date<=w.end).length);
+  const myWkCnt = data.records.filter(r => r.user===selUser && r.date>=w.start && r.date<=w.end).length;
+  const beatPct = Math.round(wkCounts.filter(c => c < myWkCnt).length / data.members.length * 100);
+
+  const [emoji, msg, bg] = MOTIVATIONS[Math.floor(Math.random() * MOTIVATIONS.length)];
+  const card = document.getElementById('resultCard');
+  card.style.background = bg;
+  card.innerHTML = `
+    <div class="result-emoji">${emoji}</div>
+    <div class="result-msg">${msg}</div>
+    <div class="result-grid">
+      <div class="result-stat"><div class="result-stat-num">${weekCnt}/4</div><div class="result-stat-lbl">本周完成</div></div>
+      <div class="result-stat"><div class="result-stat-num">${kcal}</div><div class="result-stat-lbl">累计消耗(大卡)</div></div>
+    </div>
+    <div class="result-footer">
+      🍪 相当于燃烧了 <b>${oreo}</b> 块奥利奥 / <b>${coke}</b> 罐可乐<br>
+      📊 本周超过了 <b>${beatPct}%</b> 的小伙伴${weekCnt >= 4 ? '<br>🎉 本周目标已完成！太棒了！' : `，还差 <b>${4-weekCnt}</b> 次完成本周目标，加油！`}
+    </div>`;
+  card.classList.add('show');
+  setTimeout(() => card.classList.remove('show'), 9000);
 }
 
 function switchPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
-  const idx = ['checkin','progress','rank','mine'].indexOf(name);
-  document.querySelectorAll('.nav-item')[idx].classList.add('active');
+  ['checkin','progress','rank','mine'].forEach((n,i) => {
+    if (n === name) document.querySelectorAll('.nav-item')[i].classList.add('active');
+  });
   if (name === 'progress') renderProgress();
   if (name === 'rank') renderRank();
-  if (name === 'mine' && mineSelected) renderMine(mineSelected);
+  if (name === 'mine' && mineUser) renderMine(mineUser);
 }
 
-function render() {
-  const week = getWeekRange(today());
-  document.getElementById('weekRange').textContent = week.label;
+function renderAll() {
+  const w = week(today());
+  document.getElementById('weekRange').textContent = w.label;
+  const sat = new Date(w.end);
+  const now = new Date();
+  const diff = Math.ceil((sat - now) / 86400000);
+  document.getElementById('weekCountdown').textContent = diff <= 0 ? '今天结束' : '还剩' + diff + '天';
   renderCheckin();
+  initMineGrid();
 }
 
 function renderCheckin() {
   const grid = document.getElementById('userGrid');
   grid.innerHTML = '';
-  appData.members.forEach(m => {
+  data.members.forEach(m => {
     const btn = document.createElement('button');
-    btn.className = 'user-btn' + (m === selectedUser ? ' selected' : '');
+    btn.className = 'user-btn' + (m === selUser ? ' selected' : '');
     btn.textContent = m;
-    btn.onclick = () => selectUser(m);
+    btn.onclick = () => { selUser = m; renderCheckin(); };
     grid.appendChild(btn);
   });
-  updateCheckinStatus();
-}
-
-function selectUser(name) {
-  selectedUser = name;
-  renderCheckin();
-}
-
-function updateCheckinStatus() {
   const t = today();
-  const done = selectedUser && appData.records.find(r => r.user === selectedUser && r.date === t);
+  const done = selUser && data.records.find(r => r.user === selUser && r.date === t);
   const btn = document.getElementById('checkinBtn');
   const status = document.getElementById('todayStatus');
-
-  if (!selectedUser) {
-    btn.disabled = true;
-    btn.textContent = '✅ 今天运动了！';
-    status.innerHTML = '请先选择名字';
-    return;
+  if (!selUser) {
+    btn.disabled = true; btn.textContent = '✅ 今天运动了！';
+    status.innerHTML = '请先选择名字'; return;
   }
   if (done) {
-    btn.disabled = true;
-    btn.textContent = '今天已打卡 ✅';
-    status.innerHTML = `<span class="done-badge">✅ 今天已完成打卡</span>`;
+    btn.disabled = true; btn.textContent = '今天已打卡 ✅';
+    status.innerHTML = '<span class="done-badge">✅ 今天已完成打卡</span>';
   } else {
-    btn.disabled = false;
-    btn.textContent = '✅ 今天运动了！';
-    const week = getWeekRange(t);
-    const cnt = appData.records.filter(r => r.user === selectedUser && r.date >= week.start && r.date <= week.end).length;
-    status.innerHTML = `本周已完成 <b>${cnt}</b> / 4 次`;
+    btn.disabled = false; btn.textContent = '✅ 今天运动了！';
+    const w = week(t);
+    const cnt = data.records.filter(r => r.user===selUser && r.date>=w.start && r.date<=w.end).length;
+    status.innerHTML = '本周已完成 <b>' + cnt + '</b> / 4 次';
   }
 }
 
 function renderProgress() {
-  const week = getWeekRange(today());
-  const list = document.getElementById('progressList');
-  list.innerHTML = '';
+  const w = week(today());
+  const sorted = [...data.members].map(m => ({
+    name: m,
+    cnt: data.records.filter(r => r.user===m && r.date>=w.start && r.date<=w.end).length
+  })).sort((a,b) => b.cnt - a.cnt);
 
-  appData.members.forEach(m => {
-    const cnt = appData.records.filter(r => r.user === m && r.date >= week.start && r.date <= week.end).length;
-    const pct = Math.min(cnt / 4 * 100, 100);
-    const isDone = cnt >= 4;
-    list.innerHTML += `
-      <div class="member-row">
-        <div class="member-name">${m}</div>
-        <div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>
-        <div class="progress-count ${isDone?'done':''}">${isDone?'✅':cnt+'/4'}</div>
-      </div>`;
-  });
+  document.getElementById('progressList').innerHTML = sorted.map(({ name, cnt }) => {
+    const pct = Math.min(cnt/4*100, 100), done = cnt >= 4;
+    return `<div class="member-row">
+      <div class="member-name">${name}</div>
+      <div class="bar-wrap"><div class="bar${done?' done':''}" style="width:${pct}%"></div></div>
+      <div class="bar-cnt${done?' done':''}">${done ? '✅' : cnt+'/4'}</div>
+    </div>`;
+  }).join('');
 
-  // 本周日历
-  const cal = document.getElementById('weekCalendar');
-  const days = ['日','一','二','三','四','五','六'];
-  let html = days.map(d => `<div style="text-align:center;font-size:11px;color:#aaa;padding:4px 0">${d}</div>`).join('');
-
-  const start = new Date(week.start);
+  const DAY_NAMES = ['\u65e5','\u4e00','\u4e8c','\u4e09','\u56db','\u4e94','\u516d'];
+  let html = DAY_NAMES.map(d => '<div class="cal-hd">'+d+'</div>').join('');
+  const start = new Date(w.start);
   for (let i = 0; i < 7; i++) {
-    const d = new Date(start); d.setDate(start.getDate() + i);
-    const ds = toDateStr(d);
-    const checkers = appData.members.filter(m => appData.records.find(r => r.user === m && r.date === ds));
-    const isToday = ds === today();
-    const isFuture = ds > today();
-    let cls = isFuture ? 'cal-day empty' : (checkers.length > 0 ? 'cal-day checked' : 'cal-day');
-    if (isToday) cls += ' today';
-    const tip = checkers.length > 0 ? `${checkers.length}人` : (isFuture ? '' : `${d.getDate()}`);
-    html += `<div class="${cls}" title="${checkers.join(',')}">${isFuture ? d.getDate() : (checkers.length > 0 ? checkers.length+'人' : d.getDate())}</div>`;
+    const d = new Date(start); d.setDate(start.getDate()+i);
+    const ds = toDS(d);
+    const n = data.members.filter(m => data.records.find(r => r.user===m && r.date===ds)).length;
+    const isToday = ds === today(), isFuture = ds > today();
+    let cls = 'cal-day' + (isFuture ? ' future' : (n > 0 ? ' has' : '')) + (isToday ? ' today' : '');
+    html += '<div class="' + cls + '">' + (isFuture ? d.getDate() : (n > 0 ? n+'人' : d.getDate())) + '</div>';
   }
-  cal.innerHTML = html;
-  cal.style.display = 'grid';
-  cal.style.gridTemplateColumns = 'repeat(7,1fr)';
-  cal.style.gap = '6px';
+  document.getElementById('weekCal').innerHTML = html;
 }
 
 function renderRank() {
-  const list = document.getElementById('rankList');
-  const totals = appData.members.map(m => {
-    const cnt = appData.records.filter(r => r.user === m).length;
-    // 连续天数
-    const dates = [...new Set(appData.records.filter(r => r.user === m).map(r => r.date))].sort().reverse();
-    let streak = 0;
-    let cur = new Date(today());
-    for (const d of dates) {
-      const ds = toDateStr(cur);
-      if (d === ds) { streak++; cur.setDate(cur.getDate()-1); }
-      else if (d < ds) break;
-    }
-    return { name: m, cnt, streak };
-  }).sort((a,b) => b.cnt - a.cnt || b.streak - a.streak);
+  const w = week(today());
+  const totals = data.members.map(m => {
+    const cnt = data.records.filter(r => r.user===m).length;
+    const dates = [...new Set(data.records.filter(r=>r.user===m).map(r=>r.date))].sort().reverse();
+    let streak = 0, cur = new Date(today());
+    for (const d of dates) { if (d===toDS(cur)) { streak++; cur.setDate(cur.getDate()-1); } else break; }
+    return { name: m, cnt, streak, kcal: cnt*KCAL };
+  }).sort((a,b) => b.cnt-a.cnt || b.streak-a.streak);
 
-  const medals = ['🥇','🥈','🥉'];
-  const cls = ['gold','silver','bronze'];
-  list.innerHTML = totals.map((t,i) => `
-    <div class="rank-item">
-      <div class="rank-no ${cls[i]||''}">${medals[i]||i+1}</div>
-      <div class="rank-name">${t.name}</div>
-      <div class="rank-streak">${t.streak>1?'🔥'+t.streak+'天':''}</div>
-      <div class="rank-total">${t.cnt}次</div>
-    </div>`).join('');
+  const medals = ['\u{1F947}','\u{1F948}','\u{1F949}'];
+  document.getElementById('rankList').innerHTML = totals.map((t,i) =>
+    '<div class="rank-item">' +
+    '<div class="rank-icon">' + (medals[i]||i+1) + '</div>' +
+    '<div class="rank-info"><div class="rank-name">' + t.name + '</div>' +
+    '<div class="rank-sub">' + (t.streak>1?'🔥连续'+t.streak+'天 · ':'') + '消耗'+t.kcal+'大卡</div></div>' +
+    '<div class="rank-num">' + t.cnt + '次</div></div>'
+  ).join('');
+
+  const wkRank = data.members.map(m => ({
+    name: m,
+    cnt: data.records.filter(r => r.user===m && r.date>=w.start && r.date<=w.end).length
+  })).sort((a,b) => b.cnt-a.cnt);
+
+  document.getElementById('weekRankList').innerHTML = wkRank.map((t,i) =>
+    '<div class="rank-item">' +
+    '<div class="rank-icon">' + (medals[i]||i+1) + '</div>' +
+    '<div class="rank-info"><div class="rank-name">' + t.name + '</div></div>' +
+    '<div class="rank-num">' + (t.cnt>=4 ? '✅' : t.cnt+'/4') + '</div></div>'
+  ).join('');
 }
 
-function renderMine(name) {
-  mineSelected = name;
-  // 更新选中状态
-  document.querySelectorAll('#mineUserGrid .user-btn').forEach(b => {
-    b.classList.toggle('selected', b.textContent === name);
-  });
-
-  const card = document.getElementById('myStatsCard');
-  card.style.display = 'block';
-
-  const allDates = [...new Set(appData.records.filter(r => r.user === name).map(r => r.date))].sort();
-  const week = getWeekRange(today());
-  const weekCnt = appData.records.filter(r => r.user === name && r.date >= week.start && r.date <= week.end).length;
-
-  // 连续
-  let streak = 0;
-  let cur = new Date(today());
-  const dateSet = new Set(allDates);
-  while (dateSet.has(toDateStr(cur))) { streak++; cur.setDate(cur.getDate()-1); }
-
-  document.getElementById('myStats').innerHTML = `
-    <div class="stat-box"><div class="stat-num">${allDates.length}</div><div class="stat-label">累计打卡</div></div>
-    <div class="stat-box"><div class="stat-num">${weekCnt}</div><div class="stat-label">本周次数</div></div>
-    <div class="stat-box"><div class="stat-num">${streak}</div><div class="stat-label">连续天数</div></div>
-  `;
-
-  // 近30天日历
-  const cal = document.getElementById('myCalendar');
-  const headers = ['日','一','二','三','四','五','六'];
-  let html = headers.map(d => `<div class="cal-header">${d}</div>`).join('');
-
-  const end = new Date(today());
-  const start30 = new Date(end); start30.setDate(end.getDate() - 29);
-  const startDay = start30.getDay();
-  for (let i = 0; i < startDay; i++) html += `<div class="cal-day empty"></div>`;
-
-  for (let i = 0; i < 30; i++) {
-    const d = new Date(start30); d.setDate(start30.getDate() + i);
-    const ds = toDateStr(d);
-    const isChecked = dateSet.has(ds);
-    const isToday = ds === today();
-    let cls = 'cal-day';
-    if (isChecked) cls += ' checked';
-    if (isToday) cls += ' today';
-    html += `<div class="${cls}">${d.getDate()}</div>`;
-  }
-  cal.innerHTML = html;
-}
-
-// 初始化我的页面用户选择
 function initMineGrid() {
-  const grid = document.getElementById('mineUserGrid');
+  const grid = document.getElementById('mineGrid');
   grid.innerHTML = '';
-  appData.members.forEach(m => {
+  data.members.forEach(m => {
     const btn = document.createElement('button');
-    btn.className = 'user-btn';
+    btn.className = 'user-btn' + (m === mineUser ? ' selected' : '');
     btn.textContent = m;
     btn.onclick = () => renderMine(m);
     grid.appendChild(btn);
   });
 }
 
-// 启动
-loadData().then(() => {
-  initMineGrid();
-  if (selectedUser && appData.members.includes(selectedUser)) {
-    document.querySelectorAll('#userGrid .user-btn').forEach(b => {
-      if (b.textContent === selectedUser) b.classList.add('selected');
-    });
-    updateCheckinStatus();
+function renderMine(name) {
+  mineUser = name;
+  document.querySelectorAll('#mineGrid .user-btn').forEach(b => b.classList.toggle('selected', b.textContent===name));
+  document.getElementById('mineDetail').style.display = 'block';
+
+  const allDates = [...new Set(data.records.filter(r=>r.user===name).map(r=>r.date))].sort();
+  const dateSet = new Set(allDates);
+  const w = week(today());
+  const weekCnt = data.records.filter(r=>r.user===name && r.date>=w.start && r.date<=w.end).length;
+  let streak = 0, cur = new Date(today());
+  while (dateSet.has(toDS(cur))) { streak++; cur.setDate(cur.getDate()-1); }
+  const kcal = allDates.length * KCAL;
+
+  document.getElementById('myStats').innerHTML =
+    '<div class="stat-box"><div class="stat-num">'+allDates.length+'</div><div class="stat-label">累计打卡</div></div>' +
+    '<div class="stat-box"><div class="stat-num">'+weekCnt+'</div><div class="stat-label">本周次数</div></div>' +
+    '<div class="stat-box"><div class="stat-num">'+streak+'</div><div class="stat-label">连续天数</div></div>' +
+    '<div class="stat-box" style="grid-column:span 3;background:#fff3e0"><div class="stat-num" style="color:#f57c00">'+kcal+'</div><div class="stat-label">累计消耗大卡（约'+Math.floor(kcal/53)+'块奥利奥）</div></div>';
+
+  const DAY_NAMES = ['\u65e5','\u4e00','\u4e8c','\u4e09','\u56db','\u4e94','\u516d'];
+  let html = DAY_NAMES.map(d => '<div class="cal-hd">'+d+'</div>').join('');
+  const end = new Date(today());
+  const s30 = new Date(end); s30.setDate(end.getDate()-29);
+  for (let i=0; i<s30.getDay(); i++) html += '<div class="cal-day empty"></div>';
+  for (let i=0; i<30; i++) {
+    const d = new Date(s30); d.setDate(s30.getDate()+i);
+    const ds = toDS(d);
+    let cls = 'cal-day' + (dateSet.has(ds)?' has':'') + (ds===today()?' today':'');
+    html += '<div class="'+cls+'">'+d.getDate()+'</div>';
   }
-});
+  document.getElementById('myCal').innerHTML = html;
+}
+
+// 启动
+TOKEN = localStorage.getItem('gh_token') || '';
+document.getElementById('weekRange').textContent = week(today()).label;
+const wLeft = Math.ceil((new Date(week(today()).end) - new Date()) / 86400000);
+document.getElementById('weekCountdown').textContent = wLeft <= 0 ? '今天结束' : '还剩'+wLeft+'天';
+if (!TOKEN) {
+  document.getElementById('setupModal').style.display = 'flex';
+} else {
+  loadData();
+}
 </script>
 </body>
 </html>
